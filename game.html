@@ -1,13 +1,30 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" href=".game.css">
+    <link rel="stylesheet" href="game.css">
   </head>
   <body>
+    <div class="container">
     <h1 class="gameTitle">Word Snail</h1>
-    <canvas width="800" height="500" id="myCanvas"> </canvas>
-    <img id ="Snail" src="https://pixabay.com/vectors/snail-shell-mollusc-slow-to-crawl-710086/" height="100"/>
+    <canvas width="800" height="500" id="canvas"> </canvas>    
+   
+    <div class="content">
+        <p class= "clue">Word: <span id="scrambledWord">//scrambled word//</span></p>
+        <p class= "tries left">Remaining Tries: <span>2</span></p>
+        <p class= "time left">Time Left: <span><b id="maxTime">30</b>s</span></p>
+        
+    </div>
+    <div class="result">
+      <div class="inputs">
+        <input type = "text" id="playerInput">
+        <button id="submitButton">Submit</button>
+      </div>    
+       </div>  
+    </div> 
+  </div> 
 </body>
 
   <script src="./game.js" ></script>
+  <!-- <script src ="script.js"></script> -->
+
 </html>

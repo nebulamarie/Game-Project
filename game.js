@@ -13,8 +13,20 @@ let currentWord='';
 let maxTime = 10;
 let timeText = document.querySelector("#maxTime")
 
-window.onload =function(){
-    draw();
+document.addEventListener("keydown", e => {
+    // Check what key is pressed
+    
+    if(e.key == "Enter"){// If key is enter key, submit whatever is in the input box
+        evaluatePlayerInput()
+    }
+    
+
+    // If the input box is empty, do nothing
+
+}) 
+
+window.onload =function(){//what viewer will see upon start of game
+    draw();//
 }
 function draw(){
     ctx.clearRect(0,0,canvas.width, canvas.height)
@@ -22,29 +34,29 @@ function draw(){
     ctx.drawImage(playerImage, snailX, 400, playerImage.width / 8, playerImage.height / 8);
 }
 
-function beginTimer(){
+function beginTimer(){//timer function
     setInterval(()=>{
-        if (maxTime <= 0) {
-            console.log('Time is up!') 
-            maxTime = 10
-            currentWord = randomWord();
-            if(snailX < 800){
+        if (maxTime <= 0) {//if max time is less than or equal zero 
+            console.log('Time is up!') //display 'time is up'. 
+            maxTime = 10 //reset clock. reset word. 
+            currentWord = randomWord(); //reset word. 
+            if(snailX < 800){ //move snail backwrd
                 moveSnailBackward()
             }
         }
-        maxTime--;
-        timeText.innerText=maxTime
+        maxTime--;//maxTime decrement from 1000 milisecond
+        timeText.innerText=maxTime//reset clock to show player time left
     }, 1000)
 }
 beginTimer()
-function moveSnailForward(){
-    snailX -= 100
-    checkWin()
-    draw()
+function moveSnailForward(){//function to move snail forward. snail will only move forward if player answer is correct
+    snailX -= 100 //snail 'x' axis 
+    checkWin()//apply checkWin function
+    draw()//impose snail to new position
 }
 function moveSnailBackward(){
-    snailX += 100
-    draw()
+    snailX += 100 //snail 'x' axis interval
+    draw() //impose snail to new position
 }
 
 function checkWin() {
@@ -53,17 +65,18 @@ function checkWin() {
         snailX = 800;
     }
 }
-function evaluatePlayerInput(){
-    let playerAnswer = playerInput.value;
-    if(playerAnswer.toLowerCase() == currentWord.toLowerCase()){
-        console.log('correct!')
-        moveSnailForward();
-        currentWord = randomWord();
-        maxTime = 10;
+function evaluatePlayerInput(){//function for evaluating player input/submit
+    let playerAnswer = playerInput.value;// answer box = value being submitted by player
+    console.log(playerAnswer, currentWord)// display player answer and current word
+    if(playerAnswer.toLowerCase() == currentWord.toLowerCase()){//if player answer is equal to currentword
+        console.log('correct!')//display 'correct'
+        moveSnailForward();//snail moves forward
+        currentWord = randomWord();//next word will be displayed from the array of words
+        maxTime = 10;// maxTime resets
     } else {
-        console.log('incorrect')
+        console.log('incorrect')// if input is not correct display 'incorrect'
+        let playerAnswer = "" //clear input box to be empty//set player answer to empty string
     }
-
 }
 
 submitButton.addEventListener('click',e=>{
@@ -76,58 +89,38 @@ function randomNum(min, max) {
      // this function returns a random whole number between min (inclusive), max (inclusive)
   }
   currentWord = randomWord();
-function shuffle(clue) {
-    currentWord = randomWord();
-    let randomWord = "";
-    let holdIndex = [];
-    let max = clueArray.length;
-    let min = 0;
-    let tempIndex;
-    let i = 0;
-    let word = clueArray.split('');
-    do {
-        tempIndex = Math.floor(Math.random() * (max-min));
-        if(holdIndex.indexOf(tempIndex)<0) {
-            randomWord[i] = clueArray[tempIndex];
-            holdIndex.push(tempIndex);
-            i++;
-        }
-    }
-    while(tempIndex.length < max){
-        return randomWord.join("").toString();
-    }
-    };
 
-    //shuffle through array (random method)
-    //iterate through each index and shuffle so each word is scrambled
-    //create a place holder for the remainder of the array while the player is working on the current word
-    //if and only if the input == the clue snail moves forward
-    // add logic to make snail move forward when correct answer is inputted
-    // if answer is incorrect activate remaining tries
-    //if after 2 tries answer is incorrect snail moves backwards
-    // remove "used" index from array before proceeding to the next word on list and so on
-    //player must input all correct answers on array list to move to next level
-    //checkWin function is activated
+  function randomWord(wordArray){
+    let word = clueArray[randomNum(0,clueArray.length-1)]
+    let wordArea = document.querySelector('#scrambledWord');
+    wordArea.innerText = shuffleWord(word);
+    return word;
+  }
 
-    /*
-    
-    function randomNum(min, max) {
-      return Math.floor(Math.random() * (max - min + 1) ) + min;   // this function returns a random whole number between min (inclusive), max (inclusive)
-    }
-    let wordArray = ['hello', 'there', 'how', 'are', 'you'];
-    let randomIndex = randomNum(0, wordArray.length-1);
-    let randomWord = wordArray[randomIndex];
-    wordArray.splice(randomIndex, 1);
-    console.log(randomWord) 
-    console.log(wordArray)
-    console.log('==END==')
-   
+  function shuffleWord(word){
+    word = word.split(''); // split word into array    'red' -> ['r', 'e', 'd']
+    wordLength = word.length; // store the word's length in a variable (because we will be changing the word array, the length will change as well)
+    let scrambled = '' // placeholder for our new scrambled word
+    for(let i = 0; i < wordLength; i++)
+      {
+        let randomLetterIndex = randomNum(0, word.length-1);  // gets us a random index from the current word array.
+        scrambled += word[randomLetterIndex]; // add whatever the random letter is to our new scrambled word
+        word.splice(randomLetterIndex, 1)  // remove random index from word so we dont scramble the same index multiple times
+      }
+    return scrambled;//display 'scrambled' word to player
+  }
 
-    let holder = []
-    let newWord = " "
-    function()
-    for (let i=0; i = clueArray.length; i--) {
-            Push(clueArray.length -1[])
-    }
-    
+  /*TO DO
+  1. clear input field when player submits answer
+  2. remaining tries to decrement when incorrect answer submitted
+  3. reset interval for time left so that it is not continually running
+  4. move snail backward after player has 3 incorrect answers or a combo of incorrect answer and clock run out
+  5. INSTRUCTIONS WINDOW
+  6. design enhancements
+  PMVP time permitting
+  // Dictionary -> {
+//  3: [red, pie, car, cat, dog, ...],start with 3 letter words
+//  4: [blue, tree, ...], next set of words will be 4 letter words
+//  5: [green, apple, ...], next set of words will be 5 letter words
+//}
     */

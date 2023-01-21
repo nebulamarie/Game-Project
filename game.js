@@ -10,8 +10,10 @@ backgroundImage.src = "background.png";
 const playerInput = document.querySelector("#playerInput")
 const submitButton = document.querySelector("#submitButton")
 let currentWord='';
-let maxTime = 10;
+let maxTime = 11;
 let timeText = document.querySelector("#maxTime")
+let triesLeft = 3
+let triesLeftTextArea = document.querySelector("#triesLeft")
 
 document.addEventListener("keydown", e => {
     // Check what key is pressed
@@ -19,8 +21,6 @@ document.addEventListener("keydown", e => {
     if(e.key == "Enter"){// If key is enter key, submit whatever is in the input box
         evaluatePlayerInput()
     }
-    
-
     // If the input box is empty, do nothing
 
 }) 
@@ -38,11 +38,14 @@ function beginTimer(){//timer function
     setInterval(()=>{
         if (maxTime <= 0) {//if max time is less than or equal zero 
             console.log('Time is up!') //display 'time is up'. 
-            maxTime = 10 //reset clock. reset word. 
+            maxTime = 11 //reset clock. reset word. 
+            triesLeft = 3;
+            triesLeftTextArea.innerText = `${triesLeft}`
             currentWord = randomWord(); //reset word. 
             if(snailX < 800){ //move snail backwrd
                 moveSnailBackward()
             }
+
         }
         maxTime--;//maxTime decrement from 1000 milisecond
         timeText.innerText=maxTime//reset clock to show player time left
@@ -72,12 +75,26 @@ function evaluatePlayerInput(){//function for evaluating player input/submit
         console.log('correct!')//display 'correct'
         moveSnailForward();//snail moves forward
         currentWord = randomWord();//next word will be displayed from the array of words
-        maxTime = 10;// maxTime resets
+        maxTime = 11;// maxTime resets
+        triesLeft = 3;
+        triesLeftTextArea.innerText = `${triesLeft}`
+       
     } else {
         console.log('incorrect')// if input is not correct display 'incorrect'
-        let playerAnswer = "" //clear input box to be empty//set player answer to empty string
+        triesLeft = triesLeft-1; 
+        triesLeftTextArea.innerText = `${triesLeft}`
+        if (triesLeft==0){
+            currentWord = randomWord();
+            maxTime = 11;// maxTime resets
+            moveSnailBackward();
+            triesLeft=3;
+            triesLeftTextArea.innerText = `${triesLeft}`
+        }
+        //clear input box to be empty//set player answer to empty string
     }
+    playerInput.value = ""
 }
+
 
 submitButton.addEventListener('click',e=>{
     evaluatePlayerInput();
@@ -122,5 +139,6 @@ function randomNum(min, max) {
 //  3: [red, pie, car, cat, dog, ...],start with 3 letter words
 //  4: [blue, tree, ...], next set of words will be 4 letter words
 //  5: [green, apple, ...], next set of words will be 5 letter words
+sound and maybe some animation when time is up clock spin maybe
 //}
     */
